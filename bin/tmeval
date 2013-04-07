@@ -16,11 +16,10 @@ JARS="`find $TOPICMODEL_EVAL_DIR/lib_managed/jars -name '*.jar' -print | tr '\n'
 
 SCALA_LIB="$HOME/.sbt/boot/scala-2.10.0/lib/scala-library.jar"
 
-# Ensure that parallel colt 0.10.0 is at the front of the classpath.
-CP="$TOPICMODEL_EVAL_DIR/lib_managed/jars/net.sourceforge.parallelcolt/parallelcolt/parallelcolt-0.10.0.jar:$TOPICMODEL_EVAL_DIR/target/classes:$SCALA_LIB:$TOPICMODEL_EVAL_DIR/src/main/resources:$JARS:$CLASSPATH"
+CP="$TOPICMODEL_EVAL_DIR/target/classes:$SCALA_LIB:$TOPICMODEL_EVAL_DIR/src/main/resources:$JARS:$CLASSPATH"
 
 JAVA="$JAVA_HOME/bin/java"
-JAVA_COMMAND="$JAVA -classpath $CP"
+JAVA_COMMAND="$JAVA -classpath $CP -Dtmeval.dir=$TOPICMODEL_EVAL_DIR"
 
 CMD=$1
 shift
@@ -30,6 +29,10 @@ help()
 cat <<EOF
 tmeval 1.0 commands: 
 
+  corpus-stats  get some basic statistics about the various corpora
+  corpus-exp    run the experiments (use --help to see the options)
+  prepare       prepare the corpora included in data so they can be used in experiments
+  prepare-nyt   prepare the New York Times corpus if you have the English Gigaword corpus
   run           run the main method of a given class
 
 Include --help with any option for more information
@@ -39,6 +42,10 @@ EOF
 CLASS=
 
 case $CMD in
+    corpus-stats) CLASS=tmeval.data.CorpusStats;;
+    corpus-exp) CLASS=tmeval.CorpusExperiment;; 
+    prepare) CLASS=tmeval.data.PrepareCorpora;;
+    prepare-nyt) CLASS=tmeval.data.NytPreparer;;
     run) CLASS=$1; shift;;
     help) help; exit 1;;
     *) echo "Unrecognized command: $CMD"; help; exit 1;;
