@@ -1,7 +1,16 @@
 package tmeval
 
+/**
+ * A trait for methods to evaluate a topic model.
+ */
 trait TopicModelEvaluator extends (Array[Int] => Double)
 
+
+/**
+ * The particle filtering evaluator of section 3.
+ *
+ * @author jgscott and jasonbaldridge
+ */
 class KalmanEvaluator(model: TopicModel) extends TopicModelEvaluator {
 
   val numtopics = model.topicweights.length
@@ -76,6 +85,12 @@ class KalmanEvaluator(model: TopicModel) extends TopicModelEvaluator {
 
 }
 
+/**
+ * The left-to-right method of Wallach et al (2009). It is much slower than
+ * the Mallet version. (No special attempts were made to optimize it.)
+ *
+ * @author jgscott and jasonbaldridge
+ */
 class LeftToRightEvaluator(model: TopicModel, numparticles: Int = 10) 
 extends TopicModelEvaluator {
 
