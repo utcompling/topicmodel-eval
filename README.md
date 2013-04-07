@@ -8,6 +8,16 @@ Authors:
 
 This repository contains code for replicating the topic model evaluation experiments in Scott &amp; Baldridge 2013, "A recursive estimate for the predictive likelihood in a topic model."
 
+# Compiling the code
+
+Go to the top-level directory `topicmodel-eval` and run:
+
+```bash
+$ ./build compile
+```
+
+This may take a while as dependencies are downloaded and the code is compiled. If this succeeds, you are ready to move on.
+
 # Reproducing results from the paper
 
 All commands given below assume you are in the top-level directory `topicmodel-eval`.
