@@ -57,7 +57,7 @@ $ bin/tmeval corpus-exp
 
 This runs on all datasets in the data/extracted directory, with default options used in the paper.  Note that this will likely take several hours to complete since it is computing and evaluating 10 topic models for each of five to six corpora (six if you have the New York Times data).
 
-There are options that let you choose a different number of topics, different numbers of draws from the posterior, and also run on just a single dataset. For example, to use 20 topics and 3 draws for the SGU corpus, do this:
+There are options that let you choose a different number of topics, different numbers of draws from the posterior, run on just a single dataset, and also to output the results to a specified file. For example, to use 20 topics and 3 posterior draws for the SGU corpus, do this:
 
 ```bash
 $ bin/tmeval corpus-exp -n 20 -r 3 -d sgu
