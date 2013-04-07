@@ -84,3 +84,80 @@ class MalletLdaModel (
   }
 
 }
+
+
+object MalletUtil {
+
+  def createPipeline() = {
+    import cc.mallet.pipe._
+    import cc.mallet.util.CharSequenceLexer
+
+    val pipeList = new java.util.ArrayList[Pipe]()
+    pipeList.add(new Target2Label)
+    pipeList.add(new SaveDataInSource)
+    pipeList.add(new Input2CharSequence(java.nio.charset.Charset.defaultCharset.displayName))
+    pipeList.add(new CharSequence2TokenSequence(CharSequenceLexer.LEX_ALPHA))
+    pipeList.add(new TokenSequenceLowercase)
+    pipeList.add(new TokenSequenceRemoveStopwords(false, false))
+    pipeList.add(new TokenSequence2FeatureSequence)
+    new SerialPipes(pipeList)
+  }
+
+}
+
+object OutputTopics {
+  import java.io._
+  import cc.mallet.topics._
+  import cc.mallet.types._
+  import cc.mallet.pipe.iterator._
+  import scala.collection.JavaConversions._
+
+
+  def main (args: Array[String]) {
+    val extractDir = new File(Constants.TMEVAL_DIR, "data/extracted")
+
+    // Parse and get the command-line options
+    val opts = CorpusExperimentOpts(args)
+
+    val numTopics = opts.numTopics()
+
+    // Get the datasets: one can either specify a single dataset, or grab all
+    // the datasets in the data/extracted directory.
+    val datasets = opts.dataset() match {
+      case "all" => extractDir.listFiles.map(_.getName)
+      case singleDataset => Array(singleDataset)
+    }
+
+    // Set up the output writer for producing the final CSV formatted results
+    val outputWriter = opts.output() match {
+      case "stdout" => new PrintWriter(System.out)
+      case file => new PrintWriter(new BufferedWriter(new FileWriter(new File(file))))
+    }
+
+
+    for (dataset <- datasets) {
+      val datasetDir = new File(extractDir, dataset)
+
+      // Get the instances
+      val allInstances = new InstanceList(MalletUtil.createPipeline)
+      val allFiles = new FileIterator(Array(datasetDir), FileIterator.STARTING_DIRECTORIES, true)
+      allInstances.addThruPipe(allFiles)
+
+      val lda = new ParallelTopicModel(numTopics, numTopics/10, 0.01)
+
+      lda.printLogLikelihood = false
+      lda.setTopicDisplay(500, 10)
+      lda.addInstances(allInstances)
+      lda.setNumThreads(4)
+      lda.numIterations = 1000
+      lda.estimate
+
+      outputWriter.write("\n# Topics for " + dataset + "\n")
+      outputWriter.write("```\n")
+      outputWriter.write(lda.displayTopWords(20, false))
+      outputWriter.write("```\n\n")
+    }
+    outputWriter.close
+  }
+  
+}

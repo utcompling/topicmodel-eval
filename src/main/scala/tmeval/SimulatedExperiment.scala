@@ -1,43 +1,23 @@
 package tmeval
 
-object Perplexity {
+/**
+ * Run a simulated experiment on larger documents than were used with the R code.
+ *
+ * @author jasonbaldridge
+ */
+object LargeSimulatedExperiment {
+
+  import java.io._
 
   def main (args: Array[String]) {
-    println("Creating model.")
-    val tm = new SimulatedTopicModel(200,10000)
+    val Array(numTopics, vocabSize, numDocs, docLength) = args.take(4).map(_.toInt)
 
-    //val doc = tm.generateDocument()
-    //println("Kalman: " + KalmanEvaluator(tm,doc))
-    //println("Left-to-right: " + new LeftToRightEvaluator(20)(tm,doc))
+    val outputFile = args(4)
 
-    println("Creating eval documents.")
-    val numDocs = 100
-    val docs = (1 to numDocs).map(i=>tm.generateDocument())
+    val outputWriter = 
+      new PrintWriter(new BufferedWriter(new FileWriter(new File(outputFile))))
 
-    println("Kalman eval." )
-    val t1 = System.currentTimeMillis
-    val kalmanEval = new KalmanEvaluator(tm)
-    println(" LL: " + docs.map(kalmanEval).sum)
-    val t2 = System.currentTimeMillis
-    println(" Time: " + (t2-t1))
-
-    println("L2R:" )
-    val u1 = System.currentTimeMillis
-    val l2rEval = new LeftToRightEvaluator(tm, 10)
-    println(" LL: " + docs.map(l2rEval).sum)
-    val u2 = System.currentTimeMillis
-    println(" Time: " + (u2-u1))
-    
-  }
-
-}
-
-object SimulatedExperiment {
-
-  def main (args: Array[String]) {
-    val Array(numTopics, vocabSize, numDocs, docLength) = args.map(_.toInt)
-
-    val numRepetitions = 10
+    val numRepetitions = 2
     
     val results = 
       (0 until numRepetitions)
@@ -45,12 +25,14 @@ object SimulatedExperiment {
         .toArray
         .transpose
 
-    val evalTypes = Array("Kalman", "Our-L2R(1)", "Our-L2R(50)", "Mallet-L2R(50)")
+    val evalTypes = Array("Kalman", "L2R(1)", "L2R(50)")
     println("Settings: [topics=" + numTopics + "] [vocabsize=" + vocabSize + "]" + "] [numdocs=" + numDocs + "]" + "] [doclength=" + docLength + "]")
-    evalTypes.zip(results).foreach { case (etype, llResults) => {
-      println(etype + "," + llResults.sum/numRepetitions + "," + llResults.mkString(","))
-    }}
-
+    var id = 0
+    for ((etype, llResults) <- evalTypes.zip(results)) {
+      outputWriter.write("Run"+id + "," + etype + "," + llResults.sum/numRepetitions + "," + llResults.mkString(",")+"\n")
+      id += 1
+    }
+    outputWriter.close
   }
 
   def trainAndEval(numTopics: Int, vocabSize: Int, numDocs: Int, docLength: Int) = {

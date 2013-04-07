@@ -11,6 +11,8 @@ import java.util.zip._
  *
  *   http://www.ldc.upenn.edu/Catalog/catalogEntry.jsp?catalogId=LDC2003T05
  *
+ * Note: we don't take the whole NYT portion -- just the first six months of 2002.
+ * 
  * @author jasonbaldridge
  */
 object NytPreparer {
@@ -29,7 +31,7 @@ object NytPreparer {
 
   def extract(nytGigawordLocation: String) {
 
-    println("Extracting New York Times data. (This will take a while.)")
+    println("Extracting New York Times data (first six months of 2002 only).")
     
     val raw = new File(nytGigawordLocation)
 
@@ -49,15 +51,17 @@ object NytPreparer {
 
     for (file <- raw.listFiles if file.getName.endsWith(".gz")) {
       val name = file.getName
-      val number = name.slice(3,9)
+      val number = name.slice(3,9).toInt
       
-      val directory = if (number.toInt < 200206) train else eval
-      val source = scala.xml.Source.fromInputStream(new GZIPInputStream(new FileInputStream(file)))
-      val fullSgml = adapter.loadXML(source, new SAXFactoryImpl().newSAXParser)
-      for (articleSgml <- (fullSgml \ "DOC")) {
-        val id = (articleSgml \ "@id").text
-        val text = (articleSgml \ "TEXT").text
-        CorpusUtil.writeString(directory, id, text)
+      if (number > 200200 && number < 200206) {
+        val directory = if (number < 200205) train else eval
+        val source = scala.xml.Source.fromInputStream(new GZIPInputStream(new FileInputStream(file)))
+        val fullSgml = adapter.loadXML(source, new SAXFactoryImpl().newSAXParser)
+        for (articleSgml <- (fullSgml \ "DOC")) {
+          val id = (articleSgml \ "@id").text
+          val text = (articleSgml \ "TEXT").text
+          CorpusUtil.writeString(directory, id, text)
+        }
       }
     }
   }

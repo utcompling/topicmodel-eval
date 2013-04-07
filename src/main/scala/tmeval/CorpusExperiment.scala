@@ -14,7 +14,7 @@ For usage see below:
 	     """)
     val help = opt[Boolean]("help", noshort = true, descr = "Show this message")
     val repetitions = opt[Int]("repetitions", default=Some(10), validate = (0<), descr="The number of samples from the posterior to obtain for each dataset.")
-    val numTopics = opt[Int]("num-topics", default=Some(200), validate = (0<), descr="The number of topics to use in the model.")
+    val numTopics = opt[Int]("num-topics", default=Some(100), validate = (0<), descr="The number of topics to use in the model.")
     val datasets = Set("20news","gutenberg","nyt","pcl-travel","reuters","sgu","all")
     val dataset = opt[String](
       "dataset", default=Some("all"), validate = datasets,
@@ -80,6 +80,8 @@ object CorpusExperiment {
     numRepetitions: Int = 10): Array[Array[String]] = {
 
     val (trainDir, evalDir) = getFiles(dataset)
+
+    val pipeline = MalletUtil.createPipeline
 
     // Get the training instances
     val trainingInstances = new InstanceList(pipeline)
@@ -181,22 +183,6 @@ object CorpusExperiment {
     println
 
     Array(llKalman, llOurL2R1, llOurL2R50, llL2RMallet)
-  }
-
-  
-  lazy val pipeline = {
-    import cc.mallet.pipe._
-    import cc.mallet.util.CharSequenceLexer
-
-    val pipeList = new java.util.ArrayList[Pipe]()
-    pipeList.add(new Target2Label)
-    pipeList.add(new SaveDataInSource)
-    pipeList.add(new Input2CharSequence(java.nio.charset.Charset.defaultCharset.displayName))
-    pipeList.add(new CharSequence2TokenSequence(CharSequenceLexer.LEX_ALPHA))
-    pipeList.add(new TokenSequenceLowercase)
-    pipeList.add(new TokenSequenceRemoveStopwords(false, false))
-    pipeList.add(new TokenSequence2FeatureSequence)
-    new SerialPipes(pipeList)
   }
 
   private def getFile(dataset: String, subset: String) =
