@@ -10,15 +10,13 @@ object LargeSimulatedExperiment {
   import java.io._
 
   def main (args: Array[String]) {
-    val Array(numTopics, vocabSize, numDocs, docLength) = args.take(4).map(_.toInt)
+    val Array(numTopics, vocabSize, numDocs, docLength, numRepetitions) = args.take(5).map(_.toInt)
 
-    val outputFile = args(4)
+    val outputFile = args(5)
 
     val outputWriter = 
       new PrintWriter(new BufferedWriter(new FileWriter(new File(outputFile))))
 
-    val numRepetitions = 2
-    
     val results = 
       (0 until numRepetitions)
         .map(repetitionId => trainAndEval(numTopics,vocabSize,numDocs,docLength))
