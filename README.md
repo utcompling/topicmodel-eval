@@ -1,8 +1,8 @@
 # Topic Model Evaluation
 
 Authors: 
-* **James Scott** (james.scott@mccombs.utexas.edu)
-* **Jason Baldridge** (jbaldrid@mail.utexas.edu)
+* **[James Scott](http://www2.mccombs.utexas.edu/faculty/james.scott/home/Home.html)** (james.scott@mccombs.utexas.edu)
+* **[Jason Baldridge](http://www.jasonbaldridge.com)** (jbaldrid@mail.utexas.edu)
 
 This repository contains code for replicating the topic model evaluation experiments in Scott &amp; Baldridge 2013, "A recursive estimate for the predictive likelihood in a topic model." (Link to paper to be posted soon.)
 
