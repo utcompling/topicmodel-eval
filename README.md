@@ -28,44 +28,6 @@ Keep in mind that there is randomness in the algorithms, so the precise numbers 
 
 All commands given below assume you are in the top-level directory `topicmodel-eval`.
 
-Five of the datasets discussed in the paper are included in their original format in the directory `data/orig`. These are:
-
-```bash
-$ ls data/orig 
-20news.tar.bz2  gutenberg.tar.bz2  pcl-travel.tar.bz2  reuters21578.tar.bz2  sgu-2013-04-04.tar.bz2
-```
-
-To run the experiments, each of these datasets needs to be processed to form the input expected for training and evaluating models. To generate these, simply run:
-
-```bash
-$ bin/tmeval prepare
-```
-
-The New York Times corpus is not packaged with this repository as it requires having a license to [the English Gigaword corpus](http://www.ldc.upenn.edu/Catalog/catalogEntry.jsp?catalogId=LDC2003T05). If you have that corpus, you can process it for model training and evaluation by running:
-
-```bash
-$ bin/tmeval prepare <path-to-directory-containing-English-Gigaword>/english-gigaword-LDC2003T05/cdrom0/nyt
-```
-
-These steps will produce directories in `data/extracted` that are now ready with train and eval portions. Note that for some of the preparations, books or longer texts are cut into subdocuments---each of these is then a "document" for LDA to use in computing the topics.
-
-To replicate the numbers from the paper, run the following:
-
-```bash
-$ bin/tmeval corpus-exp
-```
-
-This runs on all datasets in the data/extracted directory, with default options used in the paper.  Note that this will likely take several hours to complete since it is computing and evaluating 10 topic models for each of five to six corpora (six if you have the New York Times data).
-
-There are options that let you choose a different number of topics, different numbers of draws from the posterior, run on just a single dataset, and also to output the results to a specified file. For example, to use 20 topics and 3 posterior draws for the SGU corpus, do this:
-
-```bash
-$ bin/tmeval corpus-exp -n 20 -r 3 -d sgu
-```
-
-Use `--help` with corpus-exp to see more details about the options.
-
-
 # Other stuff
 
 To get some measurements for the different corpora (Table 1 in the paper), run the following:
