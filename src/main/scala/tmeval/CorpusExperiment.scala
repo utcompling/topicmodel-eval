@@ -63,9 +63,15 @@ object CorpusExperiment {
     }
 
     // Run on all datasets and write the results to the desired output stream.
+    println("Running experiments on: " + datasets.mkString(" "))
     datasets
+      .toIterator
       .flatMap(runOneDataset(_, opts.numTopics(), opts.repetitions()))
-      .foreach(results => outputWriter.write(results.mkString(",") + "\n"))
+      .foreach {
+        results => 
+          outputWriter.write(results.mkString(",") + "\n")
+          outputWriter.flush
+      }
 
     outputWriter.close
 
