@@ -10,6 +10,11 @@ object LargeSimulatedExperiment {
   import java.io._
 
   def main (args: Array[String]) {
+    if (args.length != 6) {
+      println("Usage: bin/tmeval largesim-exp <number-of-topics> <vocabulary-size> <number-of-documents> <document-length> <number-of-repetitions> <output-file>")
+      System.exit(0)
+    }
+	      
     val Array(numTopics, vocabSize, numDocs, docLength, numRepetitions) = args.take(5).map(_.toInt)
 
     val outputFile = args(5)
@@ -25,10 +30,9 @@ object LargeSimulatedExperiment {
 
     val evalTypes = Array("Kalman", "L2R(1)", "L2R(50)")
     println("Settings: [topics=" + numTopics + "] [vocabsize=" + vocabSize + "]" + "] [numdocs=" + numDocs + "]" + "] [doclength=" + docLength + "]")
-    var id = 0
+    val name = "LargeSim"+numTopics
     for ((etype, llResults) <- evalTypes.zip(results)) {
-      outputWriter.write("Run"+id + "," + etype + "," + llResults.sum/numRepetitions + "," + llResults.mkString(",")+"\n")
-      id += 1
+      outputWriter.write(name + "," + etype + "," + llResults.sum/numRepetitions + "," + llResults.mkString(",")+"\n")
     }
     outputWriter.close
   }
