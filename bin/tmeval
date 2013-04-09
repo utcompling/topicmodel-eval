@@ -14,7 +14,7 @@ fi
 
 JARS="`find $TOPICMODEL_EVAL_DIR/lib_managed/jars -name '*.jar' -print | tr '\n' ':'`"
 
-SCALA_LIB="$HOME/.sbt/boot/scala-2.10.0/lib/scala-library.jar"
+SCALA_LIB="$HOME/.sbt/boot/scala-2.10.1/lib/scala-library.jar"
 
 CP="$TOPICMODEL_EVAL_DIR/target/classes:$SCALA_LIB:$TOPICMODEL_EVAL_DIR/src/main/resources:$JARS:$CLASSPATH"
 
