@@ -1,6 +1,6 @@
 name := "topicmodel-eval"
 
-version := "1.0-SNAPSHOT"
+version := "1.0"
 
 organization := "edu.utexas"
 
