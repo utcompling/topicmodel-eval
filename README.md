@@ -11,3 +11,5 @@ The code in this repository contains implementations for the evaluation methods 
 You can see [the topics computed for the six corpora](https://github.com/utcompling/topicmodel-eval/wiki/Example-Topics). If you don't know what a topic model is and are curious, check out the resources on David Blei's [topic modeling page](http://www.cs.princeton.edu/~blei/topicmodeling.html) and [the Mallet page on topic modeling](http://mallet.cs.umass.edu/topics.php).
 
 If you have any problems running the code, please create [an issue](https://github.com/utcompling/topicmodel-eval/issues). 
+
+It is possible that updates will be made to this repository (e.g. if there are any fixes or added documentation). To get the exact version that was used to complete the experiments done in the paper, check out the tag v1.0.
