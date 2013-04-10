@@ -12,4 +12,4 @@ You can see [the topics computed for the six corpora](https://github.com/utcompl
 
 If you have any problems running the code, please create [an issue](https://github.com/utcompling/topicmodel-eval/issues). 
 
-It is possible that updates will be made to this repository (e.g. if there are any fixes or added documentation). To get the exact version that was used to complete the experiments done in the paper, check out the tag v1.0.
+It is possible that updates will be made to this repository (e.g. if there are any fixes or added documentation). To get the exact version that was used to complete the experiments done in the paper, check out the tag v1.0, or you can [download that tagged version directly](https://github.com/utcompling/topicmodel-eval/archive/v1.0.tar.gz).
